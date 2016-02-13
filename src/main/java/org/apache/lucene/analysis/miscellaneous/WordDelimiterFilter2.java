@@ -17,6 +17,8 @@
 
 package org.apache.lucene.analysis.miscellaneous;
 
+//import org.apache.lucene.analysis.miscellaneous.WordDelimiterIterator;
+import org.apache.lucene.analysis.miscellaneous.ZWordDelimiterIterator;
 import org.apache.lucene.analysis.TokenFilter;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
@@ -157,7 +159,7 @@ public final class WordDelimiterFilter2 extends TokenFilter {
     private final TypeAttribute typeAttribute = addAttribute(TypeAttribute.class);
 
     // used for iterating word delimiter breaks
-    private final WordDelimiterIterator iterator;
+    private final ZWordDelimiterIterator iterator;
 
     // used for concatenating runs of similar typed subwords (word,number)
     private final WordDelimiterConcatenation concat = new WordDelimiterConcatenation();
@@ -197,8 +199,8 @@ public final class WordDelimiterFilter2 extends TokenFilter {
         super(in);
         this.flags = configurationFlags;
         this.protWords = protWords;
-        this.iterator = new WordDelimiterIterator(
-                charTypeTable, has(SPLIT_ON_CASE_CHANGE), has(SPLIT_ON_NUMERICS), has(STEM_ENGLISH_POSSESSIVE));
+	
+        this.iterator = new ZWordDelimiterIterator(charTypeTable, has(SPLIT_ON_CASE_CHANGE), has(SPLIT_ON_NUMERICS), has(STEM_ENGLISH_POSSESSIVE));
     }
 
     /**
@@ -210,7 +212,7 @@ public final class WordDelimiterFilter2 extends TokenFilter {
      * @param protWords If not null is the set of tokens to protect from being delimited
      */
     public WordDelimiterFilter2(TokenStream in, int configurationFlags, CharArraySet protWords) {
-        this(in, WordDelimiterIterator.DEFAULT_WORD_DELIM_TABLE, configurationFlags, protWords);
+        this(in, ZWordDelimiterIterator.DEFAULT_WORD_DELIM_TABLE, configurationFlags, protWords);
     }
 
     @Override
@@ -239,7 +241,7 @@ public final class WordDelimiterFilter2 extends TokenFilter {
                 }
 
                 // word of simply delimiters
-                if (iterator.end == WordDelimiterIterator.DONE && !has(PRESERVE_ORIGINAL)) {
+                if (iterator.end == ZWordDelimiterIterator.DONE && !has(PRESERVE_ORIGINAL)) {
                     // if the posInc is 1, simply ignore it in the accumulation
                     if (posIncAttribute.getPositionIncrement() == 1) {
                         accumPosInc--;
@@ -261,7 +263,7 @@ public final class WordDelimiterFilter2 extends TokenFilter {
             }
 
             // at the end of the string, output any concatenations
-            if (iterator.end == WordDelimiterIterator.DONE) {
+            if (iterator.end == ZWordDelimiterIterator.DONE) {
                 if (!concat.isEmpty()) {
                     if (flushConcatenation(concat)) {
                         return true;

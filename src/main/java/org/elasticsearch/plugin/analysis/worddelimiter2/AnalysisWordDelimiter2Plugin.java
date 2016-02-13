@@ -22,12 +22,15 @@ package org.elasticsearch.plugin.analysis.worddelimiter2;
 import org.elasticsearch.common.inject.Module;
 import org.elasticsearch.index.analysis.AnalysisModule;
 import org.elasticsearch.index.analysis.WordDelimiter2AnalysisBinderProcessor;
-import org.elasticsearch.plugins.AbstractPlugin;
+import org.elasticsearch.plugins.Plugin;
+
+import org.apache.lucene.analysis.miscellaneous.WordDelimiterFilter2Factory;
+import org.apache.lucene.analysis.miscellaneous.WordDelimiterFilter2;
 
 /**
  * @author ofavre
  */
-public class AnalysisWordDelimiter2Plugin extends AbstractPlugin {
+public class AnalysisWordDelimiter2Plugin extends Plugin {
 
     @Override public String name() {
         return "analysis-worddelimiter2";
@@ -37,10 +40,8 @@ public class AnalysisWordDelimiter2Plugin extends AbstractPlugin {
         return "Improved WordDelimiter token filter";
     }
 
-    @Override public void processModule(Module module) {
-        if (module instanceof AnalysisModule) {
-            AnalysisModule analysisModule = (AnalysisModule) module;
-            analysisModule.addProcessor(new WordDelimiter2AnalysisBinderProcessor());
-        }
+    public void onModule(AnalysisModule module) {
+	module.addTokenFilter(WordDelimiterFilter2.NAME, WordDelimiterFilter2Factory.class);
+//        module.addProcessor(new WordDelimiter2AnalysisBinderProcessor());
     }
 }

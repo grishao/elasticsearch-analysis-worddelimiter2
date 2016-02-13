@@ -10,8 +10,8 @@
     <inceptionYear>2013</inceptionYear>
 
     <groupId>com.yakaz.elasticsearch.plugins</groupId>
-    <artifactId>elasticsearch-analysis-worddelimiter2</artifactId>
-    <version>1.2.1-SNAPSHOT</version>
+    <artifactId>analysis-worddelimiter2</artifactId>
+    <version>2.1.1</version>
     <packaging>jar</packaging>
 
     <url>http://github.com/yakaz/elasticsearch-analysis-worddelimiter2</url>
@@ -46,8 +46,9 @@
     </parent>
 
     <properties>
-        <elasticsearch.version>1.0.0.RC1</elasticsearch.version>
-        <lucene.version>4.6.0</lucene.version>
+        <elasticsearch.version>2.1.1</elasticsearch.version>
+	<lucene.version>5.3.1</lucene.version>
+        <mvn.java.version>1.7</mvn.java.version>
     </properties>
 
     <dependencies>

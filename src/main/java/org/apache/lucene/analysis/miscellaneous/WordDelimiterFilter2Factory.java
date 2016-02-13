@@ -27,7 +27,7 @@ import org.elasticsearch.env.Environment;
 import org.elasticsearch.index.Index;
 import org.elasticsearch.index.analysis.AbstractTokenFilterFactory;
 import org.elasticsearch.index.analysis.Analysis;
-import org.elasticsearch.index.settings.IndexSettings;
+import org.elasticsearch.index.settings.IndexSettingsService;
 
 import java.util.List;
 import java.util.Map;
@@ -65,8 +65,8 @@ public class WordDelimiterFilter2Factory extends AbstractTokenFilterFactory {
     byte[] typeTable = null;
 
     @Inject
-    public WordDelimiterFilter2Factory(Index index, @IndexSettings Settings indexSettings, Environment env, @Assisted String name, @Assisted Settings settings) {
-        super(index, indexSettings, name, settings);
+    public WordDelimiterFilter2Factory(Index index, IndexSettingsService indexSettingsService, Environment env, @Assisted String name, @Assisted Settings settings) {
+        super(index, indexSettingsService.getSettings(), name, settings);
 
         // Sample Format for the type table:
         // $ => DIGIT
@@ -102,8 +102,10 @@ public class WordDelimiterFilter2Factory extends AbstractTokenFilterFactory {
         // If 1, causes generated subwords to stick at the same position, they otherwise take a new position
         flags |= getFlag(ALL_PARTS_AT_SAME_POSITION, settings, "all_parts_at_same_position", false);
         // If not null is the set of tokens to protect from being delimited
-        Set<?> protoWords = Analysis.getWordSet(env, settings, "protected_words", version);
-        protectedWords = protoWords == null ? null : CharArraySet.copy(Lucene.VERSION, protoWords);
+//        Set<?> protoWords = Analysis.getWordSet(env, settings, "protected_words", version);
+        Set<?> protoWords = Analysis.getWordSet(env, settings, "protected_words");
+//        protectedWords = protoWords == null ? null : CharArraySet.copy(Lucene.VERSION, protoWords);
+        protectedWords = protoWords == null ? null : CharArraySet.copy(protoWords);
     }
 
     public WordDelimiterFilter2 create(TokenStream input) {
